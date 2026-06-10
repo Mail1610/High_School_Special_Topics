@@ -1,0 +1,37 @@
+<resources>
+    <string name="app_name">智慧藥盒</string>
+    <string name="main_title">智慧藥盒</string>
+
+    <string name="tab_today">今日</string>
+    <string name="tab_settings">設定</string>
+    <string name="tab_history">歷史</string>
+
+    <string name="today_compliance_format">本週遵從率：%1$d%%</string>
+    <string name="today_loading">載入中…</string>
+    <string name="today_load_failed">無法連線到藥盒，請確認手機與藥盒在同一個 WiFi，並在「設定」頁填入正確的 IP</string>
+    <string name="today_refresh">重新整理</string>
+
+    <string name="state_waiting">等待</string>
+    <string name="state_alerting">提醒中</string>
+    <string name="state_taken">已服藥</string>
+    <string name="state_missed">漏服</string>
+
+    <string name="settings_host_label">藥盒 IP 位址（例如 192.168.1.105）</string>
+    <string name="settings_host_hint">192.168.1.105</string>
+    <string name="settings_slot_label_format">%1$s 服藥時間</string>
+    <string name="settings_slot_hint">HH:mm，例如 08:00</string>
+    <string name="settings_save">儲存設定</string>
+    <string name="settings_save_success">設定已儲存並送出至藥盒</string>
+    <string name="settings_save_failed">儲存失敗，請確認 IP 是否正確、藥盒是否開機</string>
+    <string name="settings_host_saved">已儲存 IP 位址</string>
+
+    <string name="history_compliance_format">本週遵從率：%1$d%%</string>
+    <string name="history_load_failed">無法載入歷史紀錄，請確認連線設定</string>
+    <string name="history_taken">服</string>
+    <string name="history_missed">漏</string>
+
+    <string name="slot_morning">早上</string>
+    <string name="slot_noon">中午</string>
+    <string name="slot_evening">晚上</string>
+    <string name="slot_night">睡前</string>
+</resources>
