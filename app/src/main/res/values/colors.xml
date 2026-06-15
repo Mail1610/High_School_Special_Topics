@@ -5,6 +5,14 @@
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="medical_blue">#FF1976D2</color>
+    <color name="medical_blue_dark">#FF1565C0</color>
+    <color name="medical_teal">#FF00897B</color>
+    <color name="slot_item_bg">#FFF5F5F5</color>
+    <color name="color_taken">#FF0F9D58</color>
+    <color name="color_missed">#FFDB4437</color>
+    <color name="color_alerting">#FFF4B400</color>
+    <color name="color_waiting">#FF9E9E9E</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

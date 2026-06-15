@@ -6,6 +6,10 @@
     <string name="tab_settings">設定</string>
     <string name="tab_history">歷史</string>
 
+    <string name="title_today">今日服藥狀態</string>
+    <string name="title_settings">藥盒設定</string>
+    <string name="title_history">服藥歷史</string>
+
     <string name="today_compliance_format">本週遵從率：%1$d%%</string>
     <string name="today_loading">載入中…</string>
     <string name="today_load_failed">無法連線到藥盒，請確認手機與藥盒在同一個 WiFi，並在「設定」頁填入正確的 IP</string>
@@ -17,7 +21,7 @@
     <string name="state_missed">漏服</string>
 
     <string name="settings_host_label">藥盒 IP 位址（例如 192.168.1.105）</string>
-    <string name="settings_host_hint">192.168.1.105</string>
+    <string name="settings_host_hint">例如：192.168.1.105</string>
     <string name="settings_slot_label_format">%1$s 服藥時間</string>
     <string name="settings_slot_hint">HH:mm，例如 08:00</string>
     <string name="settings_save">儲存設定</string>
@@ -34,4 +38,17 @@
     <string name="slot_noon">中午</string>
     <string name="slot_evening">晚上</string>
     <string name="slot_night">睡前</string>
+
+    <string name="history_refresh">重新整理</string>
+    <string name="history_loading">載入中…</string>
+    <string name="error_invalid_ip">IP 格式不正確，請輸入如 192.168.1.105 的格式</string>
+    <string name="error_no_wifi">您目前不在 Wi-Fi 環境，請連上家中 Wi-Fi 後再試</string>
+    <string name="today_no_host">尚未設定藥盒 IP，請先至「設定」頁填入</string>
+    <string name="history_no_host">尚未設定藥盒 IP，請先至「設定」頁填入</string>
+    <string name="history_date_column">日期</string>
+
+    <string name="error_times_required">請填入所有服藥時間後再儲存</string>
+    <string name="settings_section_connection">藥盒連線設定</string>
+    <string name="settings_section_times">服藥時間設定</string>
+    <string name="settings_host_hint_short">藥盒 IP 位址</string>
 </resources>

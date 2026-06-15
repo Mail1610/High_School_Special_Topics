@@ -3,19 +3,30 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="6dp"
-    android:paddingBottom="6dp">
+    android:layout_marginBottom="12dp">
 
     <TextView
         android:id="@+id/textSlotInputLabel"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimary"
+        android:layout_marginBottom="4dp" />
 
-    <EditText
-        android:id="@+id/editSlotTime"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="time"
-        android:hint="@string/settings_slot_hint" />
+        android:hint="@string/settings_slot_hint">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editSlotTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
 </LinearLayout>
