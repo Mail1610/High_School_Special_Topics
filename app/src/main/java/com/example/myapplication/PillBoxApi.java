@@ -153,11 +153,10 @@ public class PillBoxApi {
             conn.setReadTimeout(TIMEOUT_MS);
             conn.setDoOutput(true);
             conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            OutputStreamWriter writer =
-                    new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8);
-            writer.write(formBody);
-            writer.flush();
-            writer.close();
+            try (OutputStreamWriter writer =
+                    new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
+                writer.write(formBody);
+            }
             return readResponse(conn);
         } finally {
             conn.disconnect();
@@ -166,15 +165,15 @@ public class PillBoxApi {
 
     /** 逐行讀取 HttpURLConnection 的回應 body 並拼接為完整字串後回傳 */
     private String readResponse(HttpURLConnection conn) throws IOException {
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line).append('\n');
+        try (BufferedReader reader = new BufferedReader(
+                new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append('\n');
+            }
+            return sb.toString();
         }
-        reader.close();
-        return sb.toString();
     }
 
     // ── 公開 API 方法 ──────────────────────────────────────────────────────────

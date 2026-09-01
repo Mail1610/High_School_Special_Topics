@@ -1,8 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,11 +29,7 @@ public class HistoryFragment extends Fragment {
     }
 
     private boolean isOnWifi() {
-        ConnectivityManager cm = (ConnectivityManager)
-                requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-        NetworkCapabilities caps = cm.getNetworkCapabilities(cm.getActiveNetwork());
-        return caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+        return NetworkUtils.isOnWifi(requireContext());
     }
 
     /** 向 ESP32 取得最近 7 天的服藥紀錄，依 bits 欄位逐格繪製綠色（已服）/ 紅色（未服）色塊，並顯示本週遵從率 */
@@ -50,6 +43,7 @@ public class HistoryFragment extends Fragment {
         if (host.isEmpty()) {
             textCompliance.setText("");
             progressBar.setVisibility(View.INVISIBLE);
+            container.removeAllViews();
             textMessage.setText(R.string.history_no_host);
             return;
         }

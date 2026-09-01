@@ -1,8 +1,5 @@
 package com.example.myapplication;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,13 +81,8 @@ public class TodayFragment extends Fragment {
         });
     }
 
-    /** 透過 ConnectivityManager 判斷目前是否已連接 Wi-Fi */
     private boolean isOnWifi() {
-        ConnectivityManager cm = (ConnectivityManager)
-                requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm == null) return false;
-        NetworkCapabilities caps = cm.getNetworkCapabilities(cm.getActiveNetwork());
-        return caps != null && caps.hasTransport(NetworkCapabilities.TRANSPORT_WIFI);
+        return NetworkUtils.isOnWifi(requireContext());
     }
 
     /** 將 API 回傳的英文狀態碼（ALERTING/TAKEN/MISSED/WAITING）轉為中文顯示文字 */

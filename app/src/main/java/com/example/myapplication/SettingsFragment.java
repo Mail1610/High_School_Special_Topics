@@ -60,7 +60,7 @@ public class SettingsFragment extends Fragment {
 
         TextView textMessage = view.findViewById(R.id.textSettingsMessage);
 
-        view.postDelayed(() -> ((ScrollView) view).scrollTo(0, 0), 500);
+        view.post(() -> ((ScrollView) view).scrollTo(0, 0));
 
         view.findViewById(R.id.buttonSave).setOnClickListener(v -> {
             String host = editHost.getText().toString().trim();
