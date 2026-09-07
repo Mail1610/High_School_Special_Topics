@@ -20,12 +20,23 @@ public class HistoryFragment extends Fragment {
         super(R.layout.fragment_history);
     }
 
-    /** 綁定「重新整理」按鈕並在頁面建立時自動載入一次歷史資料 */
+    /** 綁定「重新整理」按鈕；切換到此頁時由 onHiddenChanged 自動載入 */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.buttonHistoryRefresh).setOnClickListener(v -> loadHistory(view));
-        loadHistory(view);
+        view.findViewById(R.id.buttonHistoryRefresh).setOnClickListener(v -> loadHistory(requireView()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isHidden() && getView() != null) loadHistory(getView());
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (!hidden && getView() != null) loadHistory(getView());
     }
 
     private boolean isOnWifi() {

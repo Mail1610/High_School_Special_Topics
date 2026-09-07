@@ -1,6 +1,8 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -14,16 +16,56 @@ import androidx.fragment.app.Fragment;
 /** 今日頁：顯示四格即時服藥狀態與本週遵從率（呼叫 ESP32 /api/status）。 */
 public class TodayFragment extends Fragment {
 
+    private static final long REFRESH_INTERVAL_MS = 30_000L;
+
+    private final Handler refreshHandler = new Handler(Looper.getMainLooper());
+    private final Runnable refreshRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (isAdded() && !isHidden()) {
+                loadStatus(requireView());
+                refreshHandler.postDelayed(this, REFRESH_INTERVAL_MS);
+            }
+        }
+    };
+
     public TodayFragment() {
         super(R.layout.fragment_today);
     }
 
-    /** 綁定「重新整理」按鈕的點擊事件，並在頁面建立時自動呼叫一次 loadStatus */
+    /** 綁定「重新整理」按鈕；首次載入與定時刷新由 onResume/onHiddenChanged 控制 */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.buttonRefresh).setOnClickListener(v -> loadStatus(view));
-        loadStatus(view);
+        view.findViewById(R.id.buttonRefresh).setOnClickListener(v -> loadStatus(requireView()));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!isHidden()) startAutoRefresh();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        stopAutoRefresh();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if (hidden) stopAutoRefresh();
+        else startAutoRefresh();
+    }
+
+    private void startAutoRefresh() {
+        refreshHandler.removeCallbacks(refreshRunnable);
+        refreshHandler.post(refreshRunnable);
+    }
+
+    private void stopAutoRefresh() {
+        refreshHandler.removeCallbacks(refreshRunnable);
     }
 
     /** 檢查 Wi-Fi、讀取儲存的 IP，向 ESP32 查詢今日四格服藥狀態與遵從率，成功後動態填入卡片清單 */
