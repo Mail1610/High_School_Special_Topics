@@ -4,6 +4,21 @@
 
 這是一款與 ESP32 智慧藥盒搭配使用的 Android 應用程式，透過 Wi-Fi 連線顯示即時服藥狀態、7 天歷史紀錄，並可設定服藥時間。
 
+### iOS 版（`ios/`）
+
+`ios/SmartPillBox.xcodeproj` 是同功能的 iPhone 版（SwiftUI，iOS 17 以上），用 Xcode 開啟即可執行。與 Android 版共用下方的「API 合約」，檔案對應如下：
+
+| iOS（`ios/SmartPillBox/`） | Android |
+|------|------|
+| `SmartPillBoxApp.swift` | `MainActivity.java` + `BottomNavigationView` |
+| `TodayView.swift` | `TodayFragment.java` |
+| `SettingsView.swift` | `SettingsFragment.java` |
+| `HistoryView.swift` | `HistoryFragment.java` |
+| `PillBoxApi.swift` | `PillBoxApi.java` |
+| `Support.swift` | `Prefs.java`、`LogUtils.java`、`NetworkUtils.java`、`colors.xml`、`strings.xml` |
+
+`ios/Info.plist` 允許 http 連線（同 Android 的 `usesCleartextTraffic="true"`），並提供「區域網路」權限說明。
+
 ---
 
 ## 專案架構
