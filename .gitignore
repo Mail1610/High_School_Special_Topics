@@ -1,5 +1,6 @@
 # Root-level ignores for the multiplatform repo.
 # Android-specific ignores live in android/.gitignore
 .gradle/
+/.idea/
 *.iml
 .DS_Store

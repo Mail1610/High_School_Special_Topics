@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.HapticFeedbackConstants;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.WindowCompat;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 return false;
             }
+            bottomNav.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
             ActionBar ab = getSupportActionBar();
             if (ab != null) ab.setTitle(title);
             return true;

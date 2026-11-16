@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -9,7 +10,10 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.os.LocaleListCompat;
 import androidx.fragment.app.Fragment;
+import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import java.util.ArrayList;
@@ -62,7 +66,10 @@ public class SettingsFragment extends Fragment {
 
         view.post(() -> ((ScrollView) view).scrollTo(0, 0));
 
+        setupLanguageToggle(view);
+
         view.findViewById(R.id.buttonSave).setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
             String host = editHost.getText().toString().trim();
 
             if (!host.isEmpty() && !isValidIp(host)) {
@@ -105,6 +112,37 @@ public class SettingsFragment extends Fragment {
         });
     }
 
+    /** 設定頁的語言切換：依目前 App 語言預選按鈕，點選後即時套用（AppCompat 會重建畫面以換語言） */
+    private void setupLanguageToggle(View view) {
+        MaterialButtonToggleGroup langGroup = view.findViewById(R.id.langToggleGroup);
+
+        LocaleListCompat current = AppCompatDelegate.getApplicationLocales();
+        int checkedId;
+        if (current.isEmpty()) {
+            checkedId = R.id.langBtnSystem;
+        } else if (current.toLanguageTags().startsWith("en")) {
+            checkedId = R.id.langBtnEn;
+        } else {
+            checkedId = R.id.langBtnZh;
+        }
+        langGroup.check(checkedId);
+
+        langGroup.addOnButtonCheckedListener((group, checkedButtonId, isChecked) -> {
+            if (!isChecked) return;
+            LocaleListCompat locale;
+            if (checkedButtonId == R.id.langBtnSystem) {
+                locale = LocaleListCompat.getEmptyLocaleList();
+            } else if (checkedButtonId == R.id.langBtnEn) {
+                locale = LocaleListCompat.forLanguageTags("en");
+            } else {
+                locale = LocaleListCompat.forLanguageTags("zh-TW");
+            }
+            if (!locale.toLanguageTags().equals(AppCompatDelegate.getApplicationLocales().toLanguageTags())) {
+                AppCompatDelegate.setApplicationLocales(locale);
+            }
+        });
+    }
+
     /** 開啟 24 小時制的時間選擇器，確認後將結果填入 editTime */
     private void openTimePicker(EditText editTime, int labelRes) {
         int hour = 8, minute = 0;
@@ -121,9 +159,11 @@ public class SettingsFragment extends Fragment {
                 .setMinute(minute)
                 .setTitleText(getString(R.string.settings_slot_label_format, getString(labelRes)))
                 .build();
-        picker.addOnPositiveButtonClickListener(v ->
-                editTime.setText(String.format(java.util.Locale.ROOT, "%02d:%02d",
-                        picker.getHour(), picker.getMinute())));
+        picker.addOnPositiveButtonClickListener(v -> {
+            editTime.performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK);
+            editTime.setText(String.format(java.util.Locale.ROOT, "%02d:%02d",
+                    picker.getHour(), picker.getMinute()));
+        });
         picker.show(getChildFragmentManager(), null);
     }
 

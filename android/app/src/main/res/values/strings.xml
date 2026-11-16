@@ -51,4 +51,9 @@
     <string name="settings_section_connection">藥盒連線設定</string>
     <string name="settings_section_times">服藥時間設定</string>
     <string name="settings_host_hint_short">藥盒 IP 位址</string>
+
+    <string name="settings_section_language">語言</string>
+    <string name="lang_system">跟隨系統</string>
+    <string name="lang_zh">中文</string>
+    <string name="lang_en">English</string>
 </resources>
