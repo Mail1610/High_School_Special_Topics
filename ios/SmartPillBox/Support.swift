@@ -64,17 +64,38 @@ enum AppColor {
     static let waiting     = Color.gray
 }
 
+/// 語言設定，對應 Android 的 AppCompatDelegate.setApplicationLocales（"system" / "zh" / "en"）
+enum AppLang {
+    static let key = "app_lang"
+    static var isEnglish: Bool {
+        switch UserDefaults.standard.string(forKey: key) ?? "system" {
+        case "en": return true
+        case "zh": return false
+        default:   return Locale.preferredLanguages.first?.hasPrefix("en") ?? false
+        }
+    }
+}
+
+/// 依目前語言回傳中文或英文字串（對應 values/strings.xml 與 values-en/strings.xml）
+func L(_ zh: String, _ en: String) -> String { AppLang.isEnglish ? en : zh }
+
+/// 觸覺回饋，對應 Android 的 HapticFeedbackConstants.CONTEXT_CLICK
+enum Haptics {
+    static func click() { UIImpactFeedbackGenerator(style: .light).impactOccurred() }
+}
+
 /// 對應 Android 的 strings.xml
 enum Str {
-    static let todayNoHost = "尚未設定藥盒 IP，請先至「設定」頁填入"
-    static let historyNoHost = "尚未設定藥盒 IP，請先至「設定」頁填入"
-    static let errorNoWifi = "您目前不在 Wi-Fi 環境，請連上家中 Wi-Fi 後再試"
-    static let loading = "載入中…"
-    static let refresh = "重新整理"
-    static let todayLoadFailed = "無法連線到藥盒，請確認手機與藥盒在同一個 WiFi，並在「設定」頁填入正確的 IP"
-    static let historyLoadFailed = "無法載入歷史紀錄，請確認連線設定"
-    static func compliance(_ rate: Int) -> String { "本週遵從率：\(rate)%" }
-    static let slotLabels = ["早上", "中午", "晚上", "睡前"]
+    static var todayNoHost: String { L("尚未設定藥盒 IP，請先至「設定」頁填入", "No pill box IP set yet. Please set it in the Settings tab first.") }
+    static var historyNoHost: String { todayNoHost }
+    static var errorNoWifi: String { L("您目前不在 Wi-Fi 環境，請連上家中 Wi-Fi 後再試", "You're not on Wi-Fi. Connect to your home Wi-Fi and try again.") }
+    static var loading: String { L("載入中…", "Loading…") }
+    static var refresh: String { L("重新整理", "Refresh") }
+    static var todayLoadFailed: String { L("無法連線到藥盒，請確認手機與藥盒在同一個 WiFi，並在「設定」頁填入正確的 IP", "Cannot reach the pill box. Make sure your phone and the pill box are on the same Wi-Fi, and enter the correct IP in the Settings tab.") }
+    static var historyLoadFailed: String { L("無法載入歷史紀錄，請確認連線設定", "Cannot load history. Please check the connection settings.") }
+    static func compliance(_ rate: Int) -> String { L("本週遵從率：\(rate)%", "This week's adherence: \(rate)%") }
+    static var slotLabels: [String] { AppLang.isEnglish ? ["Morning", "Noon", "Evening", "Bedtime"] : ["早上", "中午", "晚上", "睡前"] }
+    static func slotTimeLabel(_ i: Int) -> String { L("\(slotLabels[i]) 服藥時間", "\(slotLabels[i]) medication time") }
 }
 
 /// 遵從率卡片，今日頁與歷史頁共用（對應兩個 layout 中相同結構的 MaterialCardView）
@@ -95,6 +116,6 @@ struct ComplianceCard: View {
                 .opacity(rate == nil ? 0 : 1)
         }
         .padding(16)
-        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 2))
+        .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemGroupedBackground)).shadow(radius: 2))
     }
 }

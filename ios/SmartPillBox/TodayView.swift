@@ -27,7 +27,7 @@ struct TodayView: View {
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 18)
-                    .background(RoundedRectangle(cornerRadius: 14).fill(Color(.systemBackground)).shadow(radius: 1))
+                    .background(RoundedRectangle(cornerRadius: 14).fill(Color(.secondarySystemGroupedBackground)).shadow(radius: 1))
                 }
                 Text(message).foregroundStyle(AppColor.missed).frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -75,10 +75,10 @@ struct TodayView: View {
 
     private static func stateLabel(_ state: String) -> String {
         switch state {
-        case "ALERTING": return "提醒中"
-        case "TAKEN":    return "已服藥"
-        case "MISSED":   return "漏服"
-        default:         return "等待"
+        case "ALERTING": return L("提醒中", "Reminding")
+        case "TAKEN":    return L("已服藥", "Taken")
+        case "MISSED":   return L("漏服", "Missed")
+        default:         return L("等待", "Waiting")
         }
     }
 

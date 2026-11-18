@@ -14,7 +14,7 @@ struct HistoryView: View {
 
                 VStack(spacing: 0) {
                     HStack {
-                        Text("日期").frame(maxWidth: .infinity, alignment: .leading)
+                        Text(L("日期", "Date")).frame(maxWidth: .infinity, alignment: .leading)
                         HStack(spacing: 4) {
                             ForEach(Str.slotLabels, id: \.self) { Text($0).frame(maxWidth: .infinity) }
                         }
@@ -31,7 +31,7 @@ struct HistoryView: View {
                                 // bit0~3 對應 4 格，1 = 已服，0 = 未服
                                 ForEach(0..<4, id: \.self) { slot in
                                     let taken = (day.bits >> slot) & 1 == 1
-                                    Text(taken ? "服" : "漏")
+                                    Text(taken ? L("服", "✓") : L("漏", "✗"))
                                         .font(.system(size: 18))
                                         .foregroundStyle(.white)
                                         .frame(maxWidth: .infinity)
@@ -46,7 +46,7 @@ struct HistoryView: View {
                     }
                 }
                 .padding(16)
-                .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 1))
+                .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemGroupedBackground)).shadow(radius: 1))
 
                 Text(message).foregroundStyle(AppColor.missed).frame(maxWidth: .infinity, alignment: .leading)
             }

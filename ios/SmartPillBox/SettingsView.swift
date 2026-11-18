@@ -8,28 +8,29 @@ struct SettingsView: View {
     @State private var saving = false
     @State private var pickingSlot: Int?
     @State private var pickerDate = Date()
+    @AppStorage(AppLang.key) private var lang = "system"
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 12) {
                 card {
-                    Text("藥盒連線設定").font(.headline)
-                    TextField("例如：192.168.1.105", text: $host)
+                    Text(L("藥盒連線設定", "Pill box connection")).font(.headline)
+                    TextField(L("例如：192.168.1.105", "e.g. 192.168.1.105"), text: $host)
                         .keyboardType(.numbersAndPunctuation)
                         .textInputAutocapitalization(.never)
                         .autocorrectionDisabled()
                         .textFieldStyle(.roundedBorder)
                 }
                 card {
-                    Text("服藥時間設定").font(.headline)
+                    Text(L("服藥時間設定", "Medication times")).font(.headline)
                     ForEach(0..<4, id: \.self) { i in
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(Str.slotLabels[i]) 服藥時間")
+                            Text(Str.slotTimeLabel(i))
                                 .font(.system(size: 14, weight: .bold))
                                 .foregroundStyle(AppColor.medicalBlue)
                             // 點擊開時間選擇器，不直接打字，同 Android 的 focusable=false
                             Button { openTimePicker(i) } label: {
-                                Text(times[i].isEmpty ? "HH:mm，例如 08:00" : times[i])
+                                Text(times[i].isEmpty ? L("HH:mm，例如 08:00", "HH:mm, e.g. 08:00") : times[i])
                                     .font(.system(size: 18))
                                     .foregroundStyle(times[i].isEmpty ? .secondary : .primary)
                                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -40,9 +41,19 @@ struct SettingsView: View {
                         .padding(.bottom, 4)
                     }
                 }
+                card {
+                    Text(L("語言", "Language")).font(.headline)
+                    // 對應 Android 的 MaterialButtonToggleGroup：跟隨系統 / 中文 / English，點選即時套用
+                    Picker("", selection: $lang) {
+                        Text(L("跟隨系統", "System")).tag("system")
+                        Text("中文").tag("zh")
+                        Text("English").tag("en")
+                    }
+                    .pickerStyle(.segmented)
+                }
                 Text(message)
                 Button(action: save) {
-                    Text("儲存設定").frame(maxWidth: .infinity)
+                    Text(L("儲存設定", "Save settings")).frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(AppColor.medicalBlue)
@@ -61,13 +72,14 @@ struct SettingsView: View {
                 .datePickerStyle(.wheel)
                 .labelsHidden()
                 .environment(\.locale, Locale(identifier: "en_GB")) // 24 小時制
-                .navigationTitle(pickingSlot.map { "\(Str.slotLabels[$0]) 服藥時間" } ?? "")
+                .navigationTitle(pickingSlot.map { Str.slotTimeLabel($0) } ?? "")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
-                    ToolbarItem(placement: .cancellationAction) { Button("取消") { pickingSlot = nil } }
+                    ToolbarItem(placement: .cancellationAction) { Button(L("取消", "Cancel")) { pickingSlot = nil } }
                     ToolbarItem(placement: .confirmationAction) {
-                        Button("確定") {
+                        Button(L("確定", "OK")) {
                             if let i = pickingSlot {
+                                Haptics.click()
                                 let c = Calendar.current.dateComponents([.hour, .minute], from: pickerDate)
                                 times[i] = String(format: "%02d:%02d", c.hour ?? 0, c.minute ?? 0)
                             }
@@ -83,7 +95,7 @@ struct SettingsView: View {
         VStack(alignment: .leading, spacing: 12, content: content)
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.systemBackground)).shadow(radius: 1))
+            .background(RoundedRectangle(cornerRadius: 16).fill(Color(.secondarySystemGroupedBackground)).shadow(radius: 1))
     }
 
     private func openTimePicker(_ index: Int) {
@@ -99,19 +111,20 @@ struct SettingsView: View {
     }
 
     private func save() {
+        Haptics.click()
         let host = host.trimmingCharacters(in: .whitespaces)
         if !host.isEmpty && !Self.isValidIp(host) {
-            message = "IP 格式不正確，請輸入如 192.168.1.105 的格式"
+            message = L("IP 格式不正確，請輸入如 192.168.1.105 的格式", "Invalid IP format. Enter something like 192.168.1.105.")
             return
         }
         Prefs.setHost(host)
         if host.isEmpty {
-            message = "已儲存 IP 位址"
+            message = L("已儲存 IP 位址", "IP address saved")
             return
         }
         let trimmed = times.map { $0.trimmingCharacters(in: .whitespaces) }
         if trimmed.contains(where: \.isEmpty) {
-            message = "請填入所有服藥時間後再儲存"
+            message = L("請填入所有服藥時間後再儲存", "Please fill in all medication times before saving.")
             return
         }
         saving = true
@@ -121,9 +134,9 @@ struct SettingsView: View {
             saving = false
             if ok {
                 Prefs.setSlotTimes(trimmed)
-                message = "設定已儲存並送出至藥盒"
+                message = L("設定已儲存並送出至藥盒", "Settings saved and sent to the pill box")
             } else {
-                message = "儲存失敗，請確認 IP 是否正確、藥盒是否開機"
+                message = L("儲存失敗，請確認 IP 是否正確、藥盒是否開機", "Save failed. Check the IP and make sure the pill box is powered on.")
             }
         }
     }
